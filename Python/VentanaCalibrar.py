@@ -293,3 +293,5 @@ def abrirVentanaCalibrar():
 
     Ventana_Calibrar.mainloop()  #Starts GUI
 
+abrirVentanaCalibrar()
+

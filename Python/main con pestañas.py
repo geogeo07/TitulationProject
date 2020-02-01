@@ -1,7 +1,9 @@
 from tkinter import *
+import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
 from tkinter import PhotoImage
+from PIL import ImageTk, Image 
 import os
 
 import cv2
@@ -15,9 +17,6 @@ from urllib.request import urlopen
 
 loginWindow=Tk()
 mainMenu=Tk()
-
-
-
 
 
 def imprimir(texto):
@@ -36,8 +35,6 @@ def ejecutar(f):
 def cerrar_splashscreen():
     ejecutar(ocultar(splashScreen))
     ejecutar(mostrar(loginWindow))
-
-
 
 
 def progress(currentValue): #Llama
@@ -64,7 +61,7 @@ def hayInternet(): #Comprueba que exista alguna conexion a internet.
 
 #Funciones de la ventana principal (Pestaña principal)
 
-def verificarUsuario(ventana, username, contra):
+def verificarUsuario(username, contra):
     
     usuario_info = username
     contra_info = contra
@@ -86,8 +83,8 @@ def verificarUsuario(ventana, username, contra):
             print(contra_info)
             if contra in verificar[posicion+1]:
                 messagebox.showinfo("Listo", "Ya quedo bro")
-                ventana.deiconify()
                 loginWindow.destroy()
+                abrirVentanaMenuPrincipal()
             else:
                 messagebox.showwarning("Cuidado", "Password incorrecto")
         else:
@@ -184,72 +181,8 @@ def video_loop():
     Ventana_Calibrar.after(30, video_loop)  # call the same function after 30 milliseconds
 
 
-
-
-#crea y llama a las ventanas secundarias(FIN).
-#######################
-   
-if __name__ == '__main__':
-
-    #Creacion del login
-    loginWindow.title("Login")
-    loginWindow.geometry('1000x600')
-    loginWindow.configure(background='dark gray')
-    loginWindow.resizable(0,0)
-        #
-    EtiquetaUsuario=Label(loginWindow, text="Usuario:" , bg="pink", fg= "white")
-    EtiquetaUsuario.pack(padx=5, pady=5, ipadx=5, ipady=5)
-    TxtUsuario=Entry(loginWindow)
-    TxtUsuario.pack(fill=X,padx=5,pady=5,ipadx=5, ipady=5)
-
-    EtiquetaContra=Label(loginWindow, text="Contraseña:" , bg="pink", fg= "white")
-    EtiquetaContra.pack(padx=5, pady=5, ipadx=5, ipady=5)
-    TxtContra=Entry(loginWindow)
-    TxtContra.pack(fill=X,padx=5,pady=5,ipadx=5, ipady=5)
-
-    ButtonVerificar=Button(loginWindow,text="Verificar", fg="blue", state = 'normal' , command=lambda:verificarUsuario(mainMenu, TxtUsuario.get(), TxtContra.get()))
-
-    ButtonVerificar.pack(side=BOTTOM)
-    #Fin del login
-
-
-
-    #Crea una ventana hija del loginWindow
-    splashScreen=Toplevel(loginWindow)
-    splashScreen.title("Splash Screen")
-    splashScreen.geometry("1000x600")
-    splashScreen.config(bg="black")
-    splashScreen.protocol("WM_DELETE_WINDOW", "onexit")
-    splashScreen.resizable(0,0)
-
-    #Ocultamos loginWindow
-    ocultar(loginWindow)
-    ocultar(mainMenu)
-
-
-    #iniciamos la aplicacion abriendo el splash y manteniendo oculto el menu despues de 4000 milisegundos.
-    splashScreen.after(4000,cerrar_splashscreen)
-
-    #Agregamos una etiqueta al splash.
-    #Label(splashScreen,text="BIENVENIDO A NUESTRA APLICACIÓN",bg="black",fg="white",font=(15)).pack()
-
-    imagen=PhotoImage(file="Python/Imagenes/chavito.gif")
-    foto=Label(splashScreen, image = imagen,).pack(side=TOP)
-    #ProgressBar started
-    maxValue=100
-    progressbar=ttk.Progressbar(splashScreen,orient="horizontal",length=300,mode="determinate")
-    progressbar.pack(side=BOTTOM)
-    currentValue=0
-    progressbar["value"]=currentValue
-    progressbar["maximum"]=maxValue
-    divisions=10
-    for i in range(divisions):
-        currentValue=currentValue+20
-        progressbar.after(500, progress(currentValue))
-        # Force an update of the GUI
-        progressbar.update()
-    #ProgressBar finished.
-
+def abrirVentanaMenuPrincipal():
+    mainMenu=Tk()
     mainMenu.title("Main menu")
     mainMenu.geometry('1000x600')
 
@@ -354,10 +287,12 @@ if __name__ == '__main__':
     cap = cv2.VideoCapture(0)
     
     #imagenes de las flechas
+    global flechaArriba
+    flechaArriba = ImageTk.PhotoImage(Image.open('Python/Imagenes/flechaArriba.png'))
     flechaDerecha = PhotoImage(file='Python/Imagenes/flechaDerecha.png')
     flechaIzquierda = PhotoImage(file='Python/Imagenes/flechaIzquierda.png')
     flechaAbajo = PhotoImage(file='Python/Imagenes/flechaAbajo.png')
-    flechaArriba  = PhotoImage(file='Python/Imagenes/flechaArriba.png')
+    flechaArriba  = tk.PhotoImage(file='Python/Imagenes/flechaArriba.png')
 
     #TextField de la cantidad de movimiento que se necesita para cada eje
     AvanceTxt = Entry(Panel_Avance)
@@ -375,7 +310,7 @@ if __name__ == '__main__':
 
     #Poner las imagenes a los
     
-    ButtonDerecha = Button(Panel_Flechas, state = 'normal',  command = lambda: obtenerRadioButton(AvanceTxt.get(),1)).place(x=200, y=50)
+    ButtonDerecha = Button(Panel_Flechas, state = 'normal', image = flechaArriba, command = lambda: obtenerRadioButton(AvanceTxt.get(),1)).place(x=200, y=50)
     '''
     ButtonIzquierda=Button(Panel_Flechas,text="Izquierda", fg="blue", state = 'normal', image=flechaIzquierda , command = lambda: obtenerRadioButton(AvanceTxt.get(),2)).place(x=50, y=50)
     ButtonAbajo=Button(Panel_Flechas,text="Derecha", fg="blue", state = 'normal', image=flechaAbajo , command = lambda: obtenerRadioButton(AvanceTxt.get(),3)).place(x=150, y=100)
@@ -389,5 +324,73 @@ if __name__ == '__main__':
     ButtonParar=Button(Panel_Flechas, text="Parar", state = 'normal',background ="red", width = "5" , height= "2", command = lambda: obtenerRadioButton(AvanceTxt.get(),5)).place(x=50, y=330)
     #Fin widgets vetntana calibrar
     '''
+    mainMenu.mainloop()
+ 
+
+#crea y llama a las ventanas secundarias(FIN).
+#######################
+   
+if __name__ == '__main__':
+
+    #Creacion del login
+    loginWindow.title("Login")
+    loginWindow.geometry('1000x600')
+    loginWindow.configure(background='dark gray')
+    loginWindow.resizable(0,0)
+        #
+    EtiquetaUsuario=Label(loginWindow, text="Usuario:" , bg="pink", fg= "white")
+    EtiquetaUsuario.pack(padx=5, pady=5, ipadx=5, ipady=5)
+    TxtUsuario=Entry(loginWindow)
+    TxtUsuario.pack(fill=X,padx=5,pady=5,ipadx=5, ipady=5)
+
+    EtiquetaContra=Label(loginWindow, text="Contraseña:" , bg="pink", fg= "white")
+    EtiquetaContra.pack(padx=5, pady=5, ipadx=5, ipady=5)
+    TxtContra=Entry(loginWindow)
+    TxtContra.pack(fill=X,padx=5,pady=5,ipadx=5, ipady=5)
+
+    ButtonVerificar=Button(loginWindow,text="Verificar", fg="blue", state = 'normal' , command=lambda:verificarUsuario(TxtUsuario.get(), TxtContra.get()))
+
+    ButtonVerificar.pack(side=BOTTOM)
+    #Fin del login
+
+
+
+    #Crea una ventana hija del loginWindow
+    splashScreen=Toplevel(loginWindow)
+    splashScreen.title("Splash Screen")
+    splashScreen.geometry("1000x600")
+    splashScreen.config(bg="black")
+    splashScreen.protocol("WM_DELETE_WINDOW", "onexit")
+    splashScreen.resizable(0,0)
+
+    #Ocultamos loginWindow
+    ocultar(loginWindow)
+    ocultar(mainMenu)
+
+
+    #iniciamos la aplicacion abriendo el splash y manteniendo oculto el menu despues de 4000 milisegundos.
+    splashScreen.after(4000,cerrar_splashscreen)
+
+    #Agregamos una etiqueta al splash.
+    #Label(splashScreen,text="BIENVENIDO A NUESTRA APLICACIÓN",bg="black",fg="white",font=(15)).pack()
+
+    imagen=PhotoImage(file="Python/Imagenes/chavito.gif")
+    foto=Label(splashScreen, image = imagen,).pack(side=TOP)
+    #ProgressBar started
+    maxValue=100
+    progressbar=ttk.Progressbar(splashScreen,orient="horizontal",length=300,mode="determinate")
+    progressbar.pack(side=BOTTOM)
+    currentValue=0
+    progressbar["value"]=currentValue
+    progressbar["maximum"]=maxValue
+    divisions=10
+    for i in range(divisions):
+        currentValue=currentValue+20
+        progressbar.after(500, progress(currentValue))
+        # Force an update of the GUI
+        progressbar.update()
+    #ProgressBar finished.
+
+    
 
     loginWindow.mainloop()
