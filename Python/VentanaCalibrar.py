@@ -66,16 +66,29 @@ def activarCamara():
     Extrae el texto de la etiqueta y lo compara para ver si prende o apaga la camara.
     '''
     accion = BotonPrenderCamara.cget('text') #Consigue el atributo elegido del boton
-    print(accion)
     if accion == "Prender camara":
+        '''
+        Oculta las etiquetas de posicion de cada motor y activa la de la camara y cambia el texto del boton.
+        '''
         labelVideo.place(x=2, y= 2)
+        Etiqueta_PosicionX.place_forget()
+        Etiqueta_PosicionY.place_forget()
+        Etiqueta_PosicionZ.place_forget()
         BotonPrenderCamara['text'] = 'Apagar camara'
-        cap = cv2.VideoCapture(0)
-        video_loop()
+        global cap
+        cap = cv2.VideoCapture(0) #Crea la variable de la camara.
+        video_loop() #Llama a la funcion que graba y coloca el stream en la etiqueta
     if accion == "Apagar camara":
-        print("apagar la camara porfa")
-        BotonPrenderCamara['text'] = 'Prender camara'        
-        cap.release()
+        '''
+        Oculta las etiquetas de posicion de cada motor y activa la de la camara y cambia el texto del boton.
+        '''
+        BotonPrenderCamara['text'] = 'Prender camara'    
+        labelVideo.place_forget()  #Oculta la etiqueta del stream.
+        Etiqueta_PosicionX.place(x=10, y=10)
+        Etiqueta_PosicionY.place(x=10, y=50)
+        Etiqueta_PosicionZ.place(x=10, y=100)
+
+        cap.release() #Apaga la camara.
 
 def video_loop():
     '''
@@ -261,11 +274,12 @@ def abrirVentanaCalibrar():
 
     
     global labelVideo
-    global cap 
+    #global cap 
     #Capture video frames
-    cap = cv2.VideoCapture(0)
+    #cap = cv2.VideoCapture(0)
     labelVideo = tk.Label(Panel_Video,  height=438,  width=588) #Etiqueta donde anexamos el stream de la camara.
     
+    global Etiqueta_PosicionX , Etiqueta_PosicionY , Etiqueta_PosicionZ
     Etiqueta_PosicionX = tk.Label(Panel_Video, text = "Posicion X: ")
     Etiqueta_PosicionY = tk.Label(Panel_Video, text = "Posicion Y: ")
     Etiqueta_PosicionZ = tk.Label(Panel_Video, text = "Posicion Z: ")
