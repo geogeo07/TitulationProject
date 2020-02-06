@@ -60,6 +60,22 @@ def obtenerRadioButton(Avance, direccion):
         #moverMotor("Pulgadas",Avance, direccion)
     else:
         print("An option must be selected")
+ 
+def activarCamara():
+    '''
+    Extrae el texto de la etiqueta y lo compara para ver si prende o apaga la camara.
+    '''
+    accion = BotonPrenderCamara.cget('text') #Consigue el atributo elegido del boton
+    print(accion)
+    if accion == "Prender camara":
+        labelVideo.place(x=2, y= 2)
+        BotonPrenderCamara['text'] = 'Apagar camara'
+        cap = cv2.VideoCapture(0)
+        video_loop()
+    if accion == "Apagar camara":
+        print("apagar la camara porfa")
+        BotonPrenderCamara['text'] = 'Prender camara'        
+        cap.release()
 
 def video_loop():
     '''
@@ -76,11 +92,11 @@ def video_loop():
         labelVideo.imgtk = imgtk  # anchor imgtk so it does not be deleted by garbage-collector
         labelVideo.config(image=imgtk)  # show the image
     Ventana_Calibrar.after(30, video_loop)  # call the same function after 30 milliseconds
-    
-'''
+ 
+
 def moverMotor(unidades, Avance, direccion):
        
-    
+    '''
     #Recibe las unidades de medida, el avance(lo que contiene el textbox) y la direccion (el motor que se movera),
     #despues hace la conversion (en caso de necesitarla) a pulgadas y despues activa los puertos gpio para mover el motor.
     #Direccion: 1 Motor x+, 2 Hacia Motor x-, 3 Motor y+, 4 Motor y-, 5 Motor z+, 6 Motor z-.
@@ -243,17 +259,29 @@ def abrirVentanaCalibrar():
     Panel_Flechas = tk.LabelFrame(Ventana_Calibrar, width=335, height=400, relief="sunken") #Panel que contiene las flechas y los botones
     Panel_Flechas.place(x=650 , y=200)
 
-
-    #Capture video frames
+    
     global labelVideo
-    labelVideo = tk.Label(Panel_Video,  height=438,  width=588)
-    labelVideo.place(x=2, y= 2)
     global cap 
+    #Capture video frames
     cap = cv2.VideoCapture(0)
+    labelVideo = tk.Label(Panel_Video,  height=438,  width=588) #Etiqueta donde anexamos el stream de la camara.
+    
+    Etiqueta_PosicionX = tk.Label(Panel_Video, text = "Posicion X: ")
+    Etiqueta_PosicionY = tk.Label(Panel_Video, text = "Posicion Y: ")
+    Etiqueta_PosicionZ = tk.Label(Panel_Video, text = "Posicion Z: ")
+    Etiqueta_PosicionX.place(x=10, y=10)
+    Etiqueta_PosicionY.place(x=10, y=50)
+    Etiqueta_PosicionZ.place(x=10, y=100)
 
- 
+
+    global BotonPrenderCamara
+    BotonPrenderCamara= tk.Button(Ventana_Calibrar , text = "Prender camara",  command =  activarCamara, width=10 , height = 3)
+    BotonPrenderCamara.place(x=50 , y=500)
+
+     
 
 
+    
     #imagenes de las flechas
     flechaDerecha = tk.PhotoImage(file='Python/Imagenes/flechaDerecha.png')
     flechaIzquierda = tk.PhotoImage(file='Python/Imagenes/flechaIzquierda.png')
@@ -294,4 +322,5 @@ def abrirVentanaCalibrar():
     Ventana_Calibrar.mainloop()  #Starts GUI
 
 abrirVentanaCalibrar()
+
 

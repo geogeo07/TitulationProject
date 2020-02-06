@@ -83,8 +83,8 @@ def verificarUsuario(username, contra):
             print(contra_info)
             if contra in verificar[posicion+1]:
                 messagebox.showinfo("Listo", "Ya quedo bro")
-                loginWindow.destroy()
-                abrirVentanaMenuPrincipal()
+                loginWindow.destroy() #Cierra el login
+                abrirVentanaMenuPrincipal() #Manda a llamar a la siguiente funcion para abrir la ventana principal.
             else:
                 messagebox.showwarning("Cuidado", "Password incorrecto")
         else:
@@ -182,7 +182,7 @@ def video_loop():
 
 
 def abrirVentanaMenuPrincipal():
-    mainMenu=Tk()
+    mainMenu = Tk()
     mainMenu.title("Main menu")
     mainMenu.geometry('1000x600')
 
@@ -287,8 +287,7 @@ def abrirVentanaMenuPrincipal():
     cap = cv2.VideoCapture(0)
     
     #imagenes de las flechas
-    global flechaArriba
-    flechaArriba = ImageTk.PhotoImage(Image.open('Python/Imagenes/flechaArriba.png'))
+    #global flechaArriba, flechaDerecha, flechaIzquierda, flechaAbajo
     flechaDerecha = PhotoImage(file='Python/Imagenes/flechaDerecha.png')
     flechaIzquierda = PhotoImage(file='Python/Imagenes/flechaIzquierda.png')
     flechaAbajo = PhotoImage(file='Python/Imagenes/flechaAbajo.png')
@@ -310,8 +309,8 @@ def abrirVentanaMenuPrincipal():
 
     #Poner las imagenes a los
     
-    ButtonDerecha = Button(Panel_Flechas, state = 'normal', image = flechaArriba, command = lambda: obtenerRadioButton(AvanceTxt.get(),1)).place(x=200, y=50)
-    '''
+    ButtonDerecha = Button(Panel_Flechas, state = 'normal', image = flechaDerecha, command = lambda: obtenerRadioButton(AvanceTxt.get(),1)).place(x=200, y=50)
+    
     ButtonIzquierda=Button(Panel_Flechas,text="Izquierda", fg="blue", state = 'normal', image=flechaIzquierda , command = lambda: obtenerRadioButton(AvanceTxt.get(),2)).place(x=50, y=50)
     ButtonAbajo=Button(Panel_Flechas,text="Derecha", fg="blue", state = 'normal', image=flechaAbajo , command = lambda: obtenerRadioButton(AvanceTxt.get(),3)).place(x=150, y=100)
     ButtonArriba=Button(Panel_Flechas,text="Izquierda", fg="blue", state = 'normal', image=flechaArriba , command = lambda: obtenerRadioButton(AvanceTxt.get(),4)).place(x=150, y=10)
@@ -323,8 +322,9 @@ def abrirVentanaMenuPrincipal():
     ButtonIniciar=Button(Panel_Flechas, text="Iniciar",  state = 'normal' , width = "5" , height= "2", background ="green" , command = video_loop).place(x=250, y=330)
     ButtonParar=Button(Panel_Flechas, text="Parar", state = 'normal',background ="red", width = "5" , height= "2", command = lambda: obtenerRadioButton(AvanceTxt.get(),5)).place(x=50, y=330)
     #Fin widgets vetntana calibrar
-    '''
+    
     mainMenu.mainloop()
+    
  
 
 #crea y llama a las ventanas secundarias(FIN).

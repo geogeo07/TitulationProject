@@ -10,6 +10,11 @@ from tkinter import filedialog
 import socket
 from urllib.request import urlopen
 
+#Importaciopn de modulos de ventanas externas.
+import VentanaAgregarUsuario
+import VentanaConexion
+import VentanaCalibrar
+
 
 
 loginWindow=Tk()
@@ -44,16 +49,6 @@ def progress(currentValue): #Llama
 
 
 
-def registroUsuario(username, contra):
-    usuario_info = username
-    contra_info = contra
-    file = open("usuario_info.txt", "a")
-    file.write(usuario_info + "\n")
-    file.write(contra_info + "\n")
-    file.close()
-    messagebox.showinfo("Listo","Quedaste registrado")
-
-
 
 def verificarUsuario(ventana, username, contra):
     
@@ -84,8 +79,6 @@ def verificarUsuario(ventana, username, contra):
         else:
             messagebox.showwarning("Cuidado", "Usuario incorrecto")
          
-
-
 
 
 def hayInternet(): #Comprueba que exista alguna conexion a internet.
@@ -155,66 +148,7 @@ def guardarArchivo():
             messagebox.showinfo("Ya quedo", "Ya se guardo puñetas")
 
 
- #######################
- #crea y llama a las ventanas secundarias(INICIO).       
 
-def abrirVentanaInternet ():
-    ventanaInternet = Toplevel(mainMenu)
-    ventanaInternet.title("Internet Window")
-    ventanaInternet.geometry('380x380')
-    ventanaInternet.configure(background='dark gray')
-   
-    ventanaInternet.resizable(0,0)
-    e1=Label(ventanaInternet, text="Password:" , bg="pink", fg= "white")
-    e1.pack(padx=5, pady=5, ipadx=5, ipady=5)
-    entrada1=Entry(ventanaInternet)
-    entrada1.pack(fill=X,padx=5,pady=58,ipadx=5, ipady=5)
-    if hayInternet == False: #Comprueba si hay internet.
-        ButtonInternet=Button(ventanaInternet,text="Por internet", fg="blue", state = 'disable' )
-    else:
-        ButtonInternet=Button(ventanaInternet,text="Por internet", fg="blue", state = 'normal' )
-
-    ButtonInternet.pack(side=TOP)
-    ButtonLocal=Button(ventanaInternet,text="Local", fg="blue")
-    ButtonLocal.pack(side=BOTTOM)
-
-
-def abrirVentanaAbrirCodigo():
-    #Vetana de agregar usuario
-    ventanaAbrirCodigo = Toplevel(mainMenu)
-    
-    ventanaAbrirCodigo.title("Abrir Codigo")
-    ventanaAbrirCodigo.geometry('380x380')
-    ventanaAbrirCodigo.configure(background='dark gray')
-
-    ventanaAbrirCodigo.resizable(0,0)
-    #
-
-
-
-def abrirVentanaAgregarUsuario():
-    #Vetana de agregar usuario
-    ventanaAgregarUsuario = Toplevel(mainMenu)
-    
-    ventanaAgregarUsuario.title("Agregar usuario")
-    ventanaAgregarUsuario.geometry('380x380')
-    ventanaAgregarUsuario.configure(background='dark gray')
-
-    ventanaAgregarUsuario.resizable(0,0)
-    #
-    EtiquetaUsuario=Label(ventanaAgregarUsuario, text="Usuario:" , bg="pink", fg= "white")
-    EtiquetaUsuario.pack(padx=5, pady=5, ipadx=5, ipady=5)
-    TxtUser=Entry(ventanaAgregarUsuario)
-    TxtUser.pack(fill=X,padx=5,pady=5,ipadx=5, ipady=5)
-
-    EtiquetaContra=Label(ventanaAgregarUsuario, text="Contraseña:", bg="pink", fg= "white")
-    EtiquetaContra.pack(padx=5, pady=5, ipadx=5, ipady=5)
-    TxtPass=Entry(ventanaAgregarUsuario)
-    TxtPass.pack(fill=X,padx=5,pady=5,ipadx=5, ipady=5)
-    ButtonRegistrar=Button(ventanaAgregarUsuario,text="Registrar", fg="blue", state = 'normal' , command=lambda:registroUsuario(TxtUser.get(), TxtPass.get()))
-    
-    ButtonRegistrar.pack(side=BOTTOM)
-    #Fin ventana agregar usuario
 
 #crea y llama a las ventanas secundarias(FIN).
 #######################
@@ -237,7 +171,7 @@ if __name__ == '__main__':
     TxtContra=Entry(loginWindow)
     TxtContra.pack(fill=X,padx=5,pady=5,ipadx=5, ipady=5)
 
-    ButtonVerificar=Button(loginWindow,text="Verificar", fg="blue", state = 'normal' , command=lambda:verificarUsuario(mainMenu, TxtUsuario.get(), TxtContra.get()))
+    ButtonVerificar=Button(loginWindow,text="Verificar", fg="blue", state = 'normal', cursor="hand1" , command=lambda:verificarUsuario(mainMenu, TxtUsuario.get(), TxtContra.get()))
 
     ButtonVerificar.pack(side=BOTTOM)
 
@@ -282,7 +216,7 @@ if __name__ == '__main__':
 
 
     #Creacion del menu
-    '''
+    
     menuPrincipal = Menu(mainMenu)
     mainMenu.title("Main menu")
     mainMenu.geometry('380x480')
@@ -290,7 +224,7 @@ if __name__ == '__main__':
 
 
     menu1 = Menu(menuPrincipal, tearoff=0)
-    menuPrincipal.add_cascade(label="File", menu=menu1)
+    menuPrincipal.add_cascade(label="Principal", menu=menu1)
 
 
     menu1_1 = Menu(menu1, tearoff=0)
@@ -298,6 +232,7 @@ if __name__ == '__main__':
     menu1_1.add_command(label="Ingresar valores")
     menu1_1.add_command(label="Limpiar")
 
+    
     menu1_2 = Menu(menu1, tearoff=0)
     menu1.add_cascade(label="Abrir", menu=menu1_2)
     menu1_2.add_command(label="Abrir codigo")
@@ -309,13 +244,13 @@ if __name__ == '__main__':
     menu2_1 = Menu(menuPrincipal, tearoff=0)
 
     menuPrincipal.add_cascade(label="Ventana manual", menu=menu2_1)
-    menu2_1.add_command(label="Valores manuales")
+    menu2_1.add_command(label="Ventana manual", command = VentanaCalibrar.abrirVentanaCalibrar)
 
 
     menu3_1 = Menu(menuPrincipal, tearoff=0)
 
     menuPrincipal.add_cascade(label="Agregar Usuario", menu=menu3_1)
-    menu3_1.add_command(label="Agregar nuevo Usuario", command = abrirVentanaAgregarUsuario)
+    menu3_1.add_command(label="Agregar nuevo Usuario", command = VentanaAgregarUsuario.abrirVentanaAgregarUsuario)
 
 
     menu4_1 = Menu(menuPrincipal, tearoff=0)
@@ -325,7 +260,7 @@ if __name__ == '__main__':
     if hayInternet == False:
         menu4_1.add_command(label="Internet", state = 'disable')
     else: 
-        menu4_1.add_command(label="Internet")
+        menu4_1.add_command(label="Internet", command = VentanaConexion.abrirVentanaConexion)
     '''
 
     #Creacion de pestañas
@@ -342,7 +277,7 @@ if __name__ == '__main__':
     pestañasFrame.add(pestañaConexion, text="Conexiones")
     pestañasFrame.pack(expand=1, fill='both')
     ############
-
+    
 
 
     #Widgets pestaña principal
@@ -449,6 +384,6 @@ if __name__ == '__main__':
     ButtonIniciar=Button(Panel_Flechas, text="Iniciar",  state = 'normal' , width = "5" , height= "2", background ="green" , command = video_loop).place(x=250, y=330)
     ButtonParar=Button(Panel_Flechas, text="Parar", state = 'normal',background ="red", width = "5" , height= "2", command = lambda: obtenerRadioButton(AvanceTxt.get(),5)).place(x=50, y=330)
     #Fin widgets vetntana calibrar
-
+|   '''
 
     loginWindow.mainloop()
